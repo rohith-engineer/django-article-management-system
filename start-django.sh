@@ -3,7 +3,8 @@ set -e
 
 echo "ENV_STATE = $ENV_STATE"
 
-if [ "$ENV_STATE" = "PRODUCTION" ]; then
+if [ "${ENV_STATE^^}" = "PRODUCTION" ]; then
+
     echo "Starting Django in PRODUCTION"
     export DJANGO_SETTINGS_MODULE=djangocourse.settings
     python manage.py migrate
@@ -14,3 +15,4 @@ else
     export DJANGO_SETTINGS_MODULE=djangocourse.settings
     python manage.py runserver 0.0.0.0:8000
 fi
+
