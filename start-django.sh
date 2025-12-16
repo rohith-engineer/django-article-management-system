@@ -2,7 +2,8 @@
 # start-django.sh
 
 # Apply migrations
-poetry run python manage.py  collectstatic --noi-nput
+python manage.py collectstatic --noinput
+
 poetry run python manage.py migrate
 
 if [["$ENV_STATE"=="production"]]; then
