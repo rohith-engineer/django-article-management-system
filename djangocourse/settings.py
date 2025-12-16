@@ -124,6 +124,9 @@ LOGIN_REDIRECT_URL = 'app:home'
 LOGOUT_REDIRECT_URL = 'app:home'
 
 #ACCOUNT_LOGIN_METHODS = {"email"}
+# django-allauth (Django 5.2+ compatible)
+
+ACCOUNT_LOGIN_METHODS = {"email"}
 
 ACCOUNT_SIGNUP_FIELDS = {
     "email": {"required": True},
@@ -132,6 +135,7 @@ ACCOUNT_SIGNUP_FIELDS = {
 }
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
 
 
 SOCIALACCOUNT_PROVIDERS = {
