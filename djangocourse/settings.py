@@ -125,14 +125,15 @@ LOGOUT_REDIRECT_URL = 'app:home'
 
 # django-allauth settings (CORRECT)
 
-ACCOUNT_AUTHENTICATION_METHOD = "email"   # MUST be a string
 ACCOUNT_LOGIN_METHODS = {"email"}
 
-ACCOUNT_SIGNUP_FIELDS = ["email", "password1", "password2"]
+ACCOUNT_SIGNUP_FIELDS = [
+    "email",
+    "password1",
+    "password2",
+]
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_REQUIRED = True
+
 
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -187,8 +188,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # --------------------------------------------------
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS = ['127.0.0.1']
-
-print(">>> SETTINGS FILE LOADED <<<")
-print("ACCOUNT_AUTHENTICATION_METHOD =", ACCOUNT_AUTHENTICATION_METHOD)
-print(">>> USING djangocourse.settings <<<")
-print("ACCOUNT_AUTHENTICATION_METHOD =", os.getenv("ACCOUNT_AUTHENTICATION_METHOD"))
