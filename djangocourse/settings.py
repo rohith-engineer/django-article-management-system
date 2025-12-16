@@ -123,9 +123,7 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = 'app:home'
 LOGOUT_REDIRECT_URL = 'app:home'
 
-# django-allauth settings (CORRECT)
-
-ACCOUNT_LOGIN_METHODS = {"email"}
+#ACCOUNT_LOGIN_METHODS = {"email"}
 
 ACCOUNT_SIGNUP_FIELDS = {
     "email": {"required": True},
@@ -133,8 +131,7 @@ ACCOUNT_SIGNUP_FIELDS = {
     "password2": {"required": True},
 }
 
-
-
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 
 SOCIALACCOUNT_PROVIDERS = {
