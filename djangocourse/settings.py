@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import dj_database_url
+import socket
 
 # ------------------------
 # BASE
@@ -19,10 +20,14 @@ ADMIN_URL = os.getenv("ADMIN_URL", "admin/")
 # ------------------------
 # SECURITY (Production)
 # ------------------------
-if ENV_STATE == "PRODUCTION":
+if ENV_STATE.upper() == "PRODUCTION":
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
+    # Optional: HSTS
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
 # ------------------------
 # INSTALLED APPS
@@ -45,7 +50,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
     "widget_tweaks",
-    "whitenoise.runserver_nostatic",  # ensures dev works with whitenoise
+    "whitenoise.runserver_nostatic",
 
     # Local
     "app.apps.AppConfig",
@@ -66,7 +71,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware",  # << ADD THIS
+    "allauth.account.middleware.AccountMiddleware",  # required by Allauth
 ]
 
 if DEBUG:
@@ -121,10 +126,14 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = "app:home"
 LOGOUT_REDIRECT_URL = "app:home"
 
-# Fix Allauth warning
+# ------------------------
+# Allauth Email-only login for custom user
+# ------------------------
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGIN_METHOD = "email"
 ACCOUNT_SIGNUP_FIELDS = ["email", "password1", "password2"]
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
@@ -159,7 +168,6 @@ USE_TZ = True
 # ------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ------------------------
@@ -168,8 +176,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ------------------------
-# INTERNAL IPS (for Debug Toolbar / Browser reload)
+# INTERNAL IPS (Debug / Browser reload)
 # ------------------------
-import socket
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS = ["127.0.0.1"] + ips
