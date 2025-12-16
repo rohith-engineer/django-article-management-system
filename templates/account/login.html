@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load allauth account %}
+
+{% block base_content %}
+<main class="max-w-lg mx-auto">
+  <div class="flex flex-col bg-gray-800 text-white p-6 lg:p-16 rounded-md">
+    
+    <div class="flex flex-col text-center">
+      <h1 class="text-xl md:text-2xl lg:text-3xl font-semibold">
+        Sign in to your account
+      </h1>
+      <p class="text-sm mt-1">
+        or
+        <a href="{% url 'account_signup' %}" class="font-bold hover:underline">
+          sign up instead
+        </a>
+      </p>
+    </div>
+
+    <form method="POST" class="space-y-6 mt-6">
+      {% csrf_token %}
+
+      {% if form.errors %}
+        {% for field, errors in form.errors.items %}
+          {% for error in errors %}
+            <div class="error ">
+              {{ error }}
+            </div>
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
+
+      <div>
+        <label class="sr-only" for="{{ form.login.id_for_label }}">Email</label>
+        {% render_field form.login class="block w-full text-black shadow-sm border-gray-300 rounded-md text-sm p-2 focus:ring-emerald-500 focus:border-emerald-500" %}
+      </div>
+
+      <div>
+        <label class="sr-only" for="{{ form.password.id_for_label }}">Password</label>
+        {% render_field form.password class="block w-full text-black shadow-sm border-gray-300 rounded-md text-sm p-2 focus:ring-emerald-500 focus:border-emerald-500" %}
+      </div>
+
+      <div class="flex items-center">
+        {% render_field form.remember class="h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" %}
+        <label class="ml-3 text-sm" for="{{ form.remember.id_for_label }}">
+          {{ form.remember.label }}
+        </label>
+      </div>
+
+      <button type="submit" class="button primary w-full text-sm">
+        Sign In
+      </button>
+    </form>
+
+    {% if SOCIALACCOUNT_ENABLED %}
+      {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+    {% endif %}
+    
+
+  </div>
+</main>
+{% endblock base_content %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block base_content %}
+
+<main class="max-w-7xl mx-auto flex flex-col items-center mt-10 p-2 md:p-4 lg:p-10">
+    <h1 class="subtitle mb-2">Delete Article</h1>
+
+    <p class="text-lg mb-6">
+        Are you sure you want to delete “{{ article.title }}”?
+    </p>
+
+    <form method="POST" class="flex items-center gap-4 mt-4">
+        {% csrf_token %}
+
+        <button type="submit" class="button danger">
+            Yes, delete it
+        </button>
+
+        <a href="{% url 'app:update_articles' article.id %}"
+           class="button secondary">
+            {% include "svgs/arrow-left.svg" with class="inline-block w-4 h-4 mr-2" %}
+            No, take me back
+        </a>
+    </form>
+</main>
+
+{% endblock base_content %}

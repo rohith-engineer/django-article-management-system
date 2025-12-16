@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title -->
+    <title>{% block title %}Django Course{% endblock %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'output.css' %}">
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+
+    <!-- JS (deferred for performance) -->
+    <script defer src="https://unpkg.com/easymde/dist/easymde.min.js" crossorigin></script>
+    <script defer src="https://unpkg.com/htmx.org@2.0.4" crossorigin></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" crossorigin></script>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+{% url 'app:create_articles' as create_new_url %}
+{% url 'app:home' as articles_url %}
+{% url 'account_email' as change_email_url %}
+
+<!-- NAVBAR -->
+<nav class="px-10 py-4 border-b border-gray-300 shadow-md">
+    <div class="flex justify-end items-center gap-6 max-w-7xl mx-auto">
+
+        {% if user.is_authenticated %}
+            <a href="{{ create_new_url }}" class="button primary">
+                Create new
+            </a>
+
+            <a href="{{ articles_url }}" class="hover:underline">
+                Articles
+            </a>
+
+            <a href="{{ change_email_url }}" class="hover:underline">
+                Change email
+            </a>
+
+            <form method="POST" action="{% url 'account_logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="button secondary">
+                    Log out
+                </button>
+            </form>
+        {% else %}
+            <a href="{% url 'account_login' %}" class="button secondary">
+                Log in
+            </a>
+
+            <a href="{% url 'account_signup' %}" class="button primary">
+                Sign up
+            </a>
+        {% endif %}
+
+    </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<main class="flex-1">
+    {% block content %}
+        {% block base_content %}{% endblock %}
+    {% endblock %}
+</main>
+
+<!-- PAGE-SPECIFIC JS -->
+{% block page_js %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load allauth %}
+{% load widget_tweaks %}
+
+{% block base_content %}
+<main class="max-w-7xl mx-auto min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-md">
+
+        <!-- TEXT ABOVE THE FORM -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold tracking-tight">
+                Write and Collaborate
+                <span class="block text-emerald-600">
+                    on your Next piece
+                </span>
+            </h1>
+            <p class="mt-4 text-base text-gray-600">
+                Write on our platform for maximum productivity
+            </p>
+        </div>
+
+        <!-- SIGNUP CARD -->
+        <div class="bg-gray-800 text-white rounded-lg shadow-lg">
+
+            <div class="px-6 py-6">
+                <h2 class="text-xl font-semibold text-center mb-6">
+                    Create Your Account
+                </h2>
+
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+
+                    {% render_field form.email class="w-full text-black rounded-md p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500" %}
+                    {% render_field form.password1 class="w-full text-black rounded-md p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500" %}
+                    {% render_field form.password2 class="w-full text-black rounded-md p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500" %}
+
+                    <button
+                        type="submit"
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-md">
+                        Sign Up
+                    </button>
+                </form>
+
+                <p class="text-sm text-center mt-4">
+                    Already have an account?
+                    <a href="{% url 'account_login' %}" class="text-emerald-400 hover:underline">
+                        Sign in
+                    </a>
+                </p>
+            </div>
+
+            <div class="px-6 py-4 bg-gray-700 rounded-b-lg text-xs text-center">
+                By signing up, you agree to our
+                <a href="#" class="font-medium hover:underline">Terms</a> and
+                <a href="#" class="font-medium hover:underline">Privacy Policy</a>.
+            </div>
+
+        </div>
+    </div>
+</main>
+{% endblock base_content %}

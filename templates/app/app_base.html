@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'output.css' %}">
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+    <title>Django Course</title>
+</head>
+
+<body>
+
+
+
+
+{% url 'app:create_articles' as create_new_url %}
+{% url 'app:home' as articles_url %}
+{% url 'account_email' as change_email_url %}
+
+<nav class="px-10 py-4 border-b border-gray-300 shadow-md">
+    <div class="flex justify-end items-center gap-6 max-w-7xl mx-auto">    
+
+        {% if user.is_authenticated %}
+            <a
+             class="button primary" href="{% spaceless  %}{% if request.path != create_new_url %}{{ create_new_url }}{% else %}#{% endif %}{%  endspaceless %}">
+             Create new</a>
+
+            <a 
+            class="hover:shadow-underline hover:shadow-gray-300
+                {% if request.path == articles_url %} font-semibold {% endif %}"
+                href="{{ articles_url }}">
+                Articles
+            </a>
+
+            <a 
+            class="hover:shadow-underline hover:shadow-gray-300 
+                {% if request.path == change_email_url %} font-semibold {% endif %}"
+                href="{{ change_email_url }}">
+                Change email
+            </a>
+
+            <form method="POST" action="{% url 'account_logout' %}">
+                {% csrf_token %}
+                <button class="hover:shadow-underline hover:shadow-gray-300" type="submit">
+                    Log out
+                </button>
+            </form>
+
+        {% else %}
+            <a class="button secondary text-sm" href="{% url 'account_login' %}">Log in</a>
+            <a class="button primary text-sm" href="{% url 'account_signup' %}">Sign up</a>
+        {% endif %}
+        
+    </div>
+</nav>
+
+{% block base_content %}{% endblock base_content %}
+
+{% block page_js %}{% endblock page_js %}
+
+</body>
+</html>

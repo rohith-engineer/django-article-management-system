@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block base_content %}
+<main class="max-w-7xl mx-auto mt-10 p-2 md:p-4 lg:p-10">
+
+    <h1 class="title mb-4">Welcome</h1>
+    <p>
+        You have created {{ user.article_count|intcomma }} articles{{ user.article_count|pluralize }}
+        and written {{ user.written_words|intcomma }} words{{ user.written_words|pluralize }}.
+    </p><br>
+
+    <a class="button primary inline-block mb-6 w-full sm:w-auto text-center"
+       href="{% url 'app:create_articles' %}">
+        Create New Article
+    </a>
+
+    <h2 class="subtitle mb-6">Your Latest Articles</h2>
+    <form
+    method="GET"
+    hx-get="{% url 'app:home' %}"
+    hx-target="#article-list"
+    hx-trigger="keyup changed delay:300ms"
+    class="flex items-center gap-2 mb-4"
+>
+    <input
+        type="search"
+        name="search"
+        value="{{ request.GET.search }}"
+        placeholder="Search articles..."
+        class="border border-gray-300 bg-white px-3 py-1 rounded-md text-sm
+               focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+    >
+    <button
+        type="submit"
+        class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600"
+    >
+        Search
+    </button>
+</form>
+
+
+    {% if articles %}
+        <ul>
+            {% for article in articles %}
+                <li class="mb-2">
+                    <a href="{% url 'app:update_articles' article.id %}"
+                       class="text-blue-500 hover:underline">
+                        {{ article.title }}
+                    </a>
+                    — {{ article.word_count }} words
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+
+        <div class="flex items-center justify-center gap-4 mt-6">
+
+
+        {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+       class="px-3 py-1 border rounded hover:bg-gray-100">
+        Previous
+    </a>
+        {% endif %}
+
+
+            <span class="text-sm text-gray-600">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+       class="px-3 py-1 border rounded hover:bg-gray-100">
+        Next
+    </a>
+            {% endif %}
+
+
+        </div>
+        {% endif %}
+
+    {% else %}
+        <p>No articles available yet.</p>
+    {% endif %}
+
+</main>
+{% endblock base_content %}

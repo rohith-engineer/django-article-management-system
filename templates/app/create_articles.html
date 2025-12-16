@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block base_content %}
+<div class="max-w-3xl mx-auto mt-10 p-6 bg-white shadow rounded-lg">
+    <!-- Page Heading -->
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">
+        {% if object %} Edit Article {% else %} Create New Article {% endif %}
+    </h1>
+    
+    <form method="POST" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Title Field -->
+        <div>
+            <label for="id_title" class="block text-gray-700 font-semibold mb-2">Title</label>
+            {% render_field form.title class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400" %}
+        </div>
+
+        <!-- Status Field -->
+        <div>
+            <label for="id_status" class="block text-gray-700 font-semibold mb-2">Status</label>
+            {% render_field form.status class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400" %}
+        </div>
+
+        <!-- Content Field -->
+        <div>
+            <label for="id_content" class="block text-gray-700 font-semibold mb-2">Content</label>
+            {% render_field form.content class="border border-gray-300 rounded px-3 py-2 w-full h-64 focus:outline-none focus:ring-2 focus:ring-emerald-400" %}
+        </div>
+
+        <!-- Twitter Post Field -->
+        <div>
+            <label for="id_twitter_post" class="block text-gray-700 font-semibold mb-2">Twitter Post</label>
+            {% render_field form.twitter_post class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400" %}
+        </div>
+
+        <!-- Save and Delete Buttons -->
+        <div class="flex gap-4">
+            <!-- Save Button -->
+            <button type="submit" class="bg-emerald-500 text-white font-semibold px-6 py-2 rounded hover:bg-emerald-600 transition">
+                Save Article
+            </button>
+
+            <!-- Delete Button (only visible when editing) -->
+            {% if object %}
+                <a href="{% url 'app:delete_articles' object.id %}" 
+                   class="bg-red-500 text-white font-semibold px-6 py-2 rounded hover:bg-red-600 transition">
+                   Delete Article
+                </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock base_content %}

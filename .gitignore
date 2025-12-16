@@ -1,0 +1,17 @@
+# Environment files
+.env
+.env.*
+.env.docker
+
+# Database
+db.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+
+# Static collected files
+staticfiles/
+
+# Node
+node_modules/

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block base_content %}
+<main class="max-w-3xl mx-auto mt-12 p-6 bg-white shadow rounded-lg">
+
+    <!-- Page Title -->
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">
+        Account Email Addresses
+    </h1>
+
+    <!-- Success / Info Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-4 p-3 rounded bg-emerald-100 text-emerald-800">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Existing Emails -->
+    <div class="mb-8">
+        <h2 class="text-lg font-semibold text-gray-700 mb-3">
+            Your Email Addresses
+        </h2>
+
+        {% if emailaddresses %}
+            <form method="post" action="{% url 'account_email' %}">
+                {% csrf_token %}
+
+                <div class="space-y-4">
+                    {% for emailaddress in emailaddresses %}
+                        <div class="flex items-center justify-between p-4 border rounded">
+                            <label class="flex items-center gap-3">
+                                <input
+                                    type="radio"
+                                    name="email"
+                                    value="{{ emailaddress.email }}"
+                                    {% if emailaddress.primary %}checked{% endif %}
+                                >
+                                <span class="text-gray-800">
+                                    {{ emailaddress.email }}
+                                </span>
+                            </label>
+
+                            <div class="text-sm flex gap-2">
+                                {% if emailaddress.primary %}
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                                        Primary
+                                    </span>
+                                {% endif %}
+
+                                {% if not emailaddress.verified %}
+                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded">
+                                        Unverified
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Email Actions -->
+                <div class="flex flex-wrap gap-3 mt-6">
+                    <button name="action_primary" class="button primary">
+                        Make Primary
+                    </button>
+                    <button name="action_send" class="button secondary">
+                        Re-send Verification
+                    </button>
+                    <button name="action_remove" class="button danger">
+                        Remove
+                    </button>
+                </div>
+            </form>
+        {% else %}
+            <p class="text-gray-600">No email addresses added yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Add New Email -->
+    <div>
+        <h2 class="text-lg font-semibold text-gray-700 mb-3">
+            Add New Email Address
+        </h2>
+
+        <form method="post" action="{% url 'account_email' %}" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label for="id_email" class="block text-sm font-medium text-gray-700 mb-1">
+                    Email address
+                </label>
+                <input
+                    type="email"
+                    name="email"
+                    id="id_email"
+                    required
+                    class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                >
+            </div>
+
+            <button class="button primary">
+                Add Email
+            </button>
+        </form>
+    </div>
+
+</main>
+{% endblock base_content %}

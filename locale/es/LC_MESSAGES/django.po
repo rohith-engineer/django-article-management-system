@@ -1,0 +1,39 @@
+#: app/models.py:17
+msgid "article"
+msgstr "artículo"
+
+#: app/models.py:18
+msgid "articles"
+msgstr "artículos"
+
+#: app/models.py:19
+msgid "title"
+msgstr "título"
+
+#: app/models.py:20
+msgid "content"
+msgstr "contenido"
+
+#: app/models.py:21
+msgid "word count"
+msgstr "recuento de palabras"
+
+#: app/models.py:22
+msgid "twitter post"
+msgstr "publicación de Twitter"
+
+#: app/models.py:23
+msgid "status"
+msgstr "estado"
+
+#: app/models.py:28
+msgid "created_at"
+msgstr "creado el"
+
+#: app/models.py:29
+msgid "updated_at"
+msgstr "actualizado el"
+
+#: app/models.py:31
+msgid "creator"
+msgstr "creador"

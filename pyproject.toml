@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "djangocourse"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+packages = [
+    { include = "djangocourse" },  # Django project folder
+    { include = "app" }            # Your custom apps
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+django = ">=5.2.8,<6.0.0"
+django-debug-toolbar = ">=6.1.0,<7.0.0"
+django-allauth = { version = ">=65.13.1,<66.0.0", extras = ["socialaccount"] }
+psycopg = "^3.3.2"
+dj-database-url = "^3.0.1"
+django-widget-tweaks = "^1.5.0"
+gunicorn = "^23.0.0"
+whitenoise = {extras = ["brotli"], version = "^6.11.0"}
+psycopg2-binary = "^2.9.11"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "django-browser-reload (>=1.21.0,<2.0.0)"
+]

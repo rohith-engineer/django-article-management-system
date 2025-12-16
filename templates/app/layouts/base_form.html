@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block base_content %}
+<form method="POST">
+    {% csrf_token %}
+
+    {% block article_stats %}{% endblock %}
+    {% block form_fields %}{% endblock %}
+
+    {% block buttons %}
+        <button type="submit">Save</button>
+    {% endblock %}
+</form>
+{% endblock %}

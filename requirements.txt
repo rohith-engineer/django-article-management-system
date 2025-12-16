@@ -1,0 +1,11 @@
+Django==6.0
+django-allauth
+django-debug-toolbar
+requests
+pillow
+psycopg2-binary
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
