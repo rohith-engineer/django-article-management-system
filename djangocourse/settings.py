@@ -127,11 +127,12 @@ LOGOUT_REDIRECT_URL = 'app:home'
 
 ACCOUNT_LOGIN_METHODS = {"email"}
 
-ACCOUNT_SIGNUP_FIELDS = [
-    "email",
-    "password1",
-    "password2",
-]
+ACCOUNT_SIGNUP_FIELDS = {
+    "email": {"required": True},
+    "password1": {"required": True},
+    "password2": {"required": True},
+}
+
 
 
 
