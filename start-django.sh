@@ -1,15 +1,16 @@
-#!/bin/bash
-# start-django.sh
+#!/bin/sh
+set -e
 
-# Apply migrations
-python manage.py collectstatic --noinput
+echo "ENV_STATE = $ENV_STATE"
 
-poetry run python manage.py migrate
-
-if [["$ENV_STATE"=="production"]]; then
-    poetry run gunicorn djangocourse.wsgi --workers $GUNICORN_WORKERS --forwarded-allow-ips "*"
+if [ "$ENV_STATE" = "PRODUCTION" ]; then
+    echo "Starting Django in PRODUCTION"
+    export DJANGO_SETTINGS_MODULE=djangocourse.settings
+    python manage.py migrate
+    python manage.py collectstatic --noinput
+    gunicorn djangocourse.wsgi:application --bind 0.0.0.0:8000
 else
-    poetry run python manage.py runserver 0.0.0.0:8000
-
+    echo "Starting Django in DEVELOPMENT"
+    export DJANGO_SETTINGS_MODULE=djangocourse.settings
+    python manage.py runserver 0.0.0.0:8000
 fi
-
