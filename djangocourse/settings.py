@@ -3,14 +3,8 @@ import os
 import socket
 import dj_database_url
 
-# --------------------------------------------------
-# BASE
-# --------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --------------------------------------------------
-# ENV
-# --------------------------------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-secret")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ENV_STATE = os.getenv("ENV_STATE", "DEVELOPMENT")
@@ -193,3 +187,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # --------------------------------------------------
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS = ['127.0.0.1']
+
+print(">>> SETTINGS FILE LOADED <<<")
+print("ACCOUNT_AUTHENTICATION_METHOD =", ACCOUNT_AUTHENTICATION_METHOD)
