@@ -55,8 +55,7 @@ INSTALLED_APPS = [
 ]
 
 if DEBUG:
-    INSTALLED_APPS += [
-        'debug_toolbar',
+    INSTALLED_APPS += [ 
         'django_browser_reload',
         'whitenoise.runserver_nostatic',
     ]
@@ -78,7 +77,6 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    MIDDLEWARE.insert(2, 'debug_toolbar.middleware.DebugToolbarMiddleware')
     MIDDLEWARE.append('django_browser_reload.middleware.BrowserReloadMiddleware')
 
 # --------------------------------------------------
