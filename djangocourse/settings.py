@@ -129,16 +129,17 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = 'app:home'
 LOGOUT_REDIRECT_URL = 'app:home'
 
-#ACCOUNT_LOGIN_METHODS = {"email"}
+# django-allauth settings (CORRECT)
 
-ACCOUNT_AUTHENTICATION_METHOD = None  # IMPORTANT (old setting disabled)
+ACCOUNT_AUTHENTICATION_METHOD = "email"   # MUST be a string
+ACCOUNT_LOGIN_METHODS = {"email"}
 
-ACCOUNT_LOGIN_METHODS = {"email"}     # user logs in using email
 ACCOUNT_SIGNUP_FIELDS = ["email", "password1", "password2"]
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+
 
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
