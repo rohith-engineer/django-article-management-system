@@ -133,18 +133,12 @@ LOGOUT_REDIRECT_URL = "app:home"
 # ALLAUTH (Email‑only, modern & warning‑free)
 # ==================================================
 
-ACCOUNT_USERNAME_REQUIRED = False      # disable username if using email login
-ACCOUNT_EMAIL_REQUIRED = True 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_SIGNUP_FIELDS = ["email", "password1", "password2"]
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_PRESERVE_USERNAME_CASING = False
-
-# Example
-ACCOUNT_USERNAME_REQUIRED = False      # disable username if using email login
-ACCOUNT_EMAIL_REQUIRED = True     # login via email only
 
 
 
