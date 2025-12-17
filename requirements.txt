@@ -1,11 +1,6 @@
-Django==6.0
-django-allauth
-django-debug-toolbar
-requests
-pillow
-psycopg2-binary
-numpy
-pandas
-scikit-learn
-matplotlib
-seaborn
+Django==5.2.8
+django-allauth==0.63.3
+whitenoise==6.11.0
+dj-database-url==2.2.0
+gunicorn==21.2.0
+psycopg2-binary==2.9.9
