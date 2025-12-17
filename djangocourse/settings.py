@@ -14,10 +14,8 @@ if not SECRET_KEY:
 DEBUG = os.getenv("DEBUG", "").lower() == "true"
 ENV_STATE = os.getenv("ENV_STATE", "DEVELOPMENT").upper()
 
-ALLOWED_HOSTS = os.getenv(
-    "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,.railway.app"
-).split(",")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+
 
 SITE_ID = 1
 ADMIN_URL = os.getenv("ADMIN_URL", "admin/")
@@ -134,6 +132,9 @@ LOGOUT_REDIRECT_URL = "app:home"
 # ==================================================
 # ALLAUTH (Email‑only, modern & warning‑free)
 # ==================================================
+
+ACCOUNT_USERNAME_REQUIRED = False      # disable username if using email login
+ACCOUNT_EMAIL_REQUIRED = True 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email", "password1", "password2"]
