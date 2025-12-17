@@ -3,6 +3,9 @@ __pycache__
 *.pyo
 *.pyd
 *.sqlite3
-*.env
+*.log
 .env
-venv
+/staticfiles
+/media
+.DS_Store
+.vscode

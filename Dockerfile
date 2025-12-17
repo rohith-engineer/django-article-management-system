@@ -1,37 +1,43 @@
-# Use Python slim image
+# ========================
+# Base Image
+# ========================
 FROM python:3.12-slim
 
-# Prevent Python buffering
-ENV PYTHONUNBUFFERED=1
+# Set environment
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 
 # Create working directory
-WORKDIR /code
+WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
-    gettext \
-    && rm -rf /var/lib/apt/lists/*
+# ========================
+# Install dependencies
+# ========================
+RUN apt-get update && \
+    apt-get install -y build-essential libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install Poetry
-RUN pip install --no-cache-dir poetry
+# Copy requirements and install
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-# Copy project files (first only pyproject to optimize caching)
-COPY pyproject.toml poetry.lock /code/
+# ========================
+# Copy project
+# ========================
+COPY . .
 
-# Copy all source code
-COPY . /code/
+# ========================
+# Collect static files
+# ========================
+RUN python manage.py collectstatic --noinput
 
-# Give execute permissions to /code directory and start-django.sh
-RUN chmod 755 /code /code/start-django.sh
-
-# Disable virtualenv creation + install dependencies
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi
-
-# Expose Django port
+# ========================
+# Expose port
+# ========================
 EXPOSE 8000
 
-# Use start-django.sh as entrypoint
-ENTRYPOINT ["/code/start-django.sh"]
+# ========================
+# Start Gunicorn
+# ========================
+CMD ["gunicorn", "djangocourse.wsgi:application", "--bind", "0.0.0.0:$PORT"]
