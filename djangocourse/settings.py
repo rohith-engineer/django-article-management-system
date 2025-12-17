@@ -141,6 +141,12 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_PRESERVE_USERNAME_CASING = False
 
+# Example
+ACCOUNT_USERNAME_REQUIRED = False      # disable username if using email login
+ACCOUNT_EMAIL_REQUIRED = True     # login via email only
+
+
+
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
         "APP": {
