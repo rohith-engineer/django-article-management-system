@@ -15,5 +15,4 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY . .
 
 RUN python manage.py collectstatic --noinput || true
-
-CMD ["gunicorn", "djangocourse.wsgi:application", "--bind", "0.0.0.0:${PORT}", "--workers", "2"]
+CMD sh -c "python manage.py migrate && gunicorn djangocourse.wsgi:application --bind 0.0.0.0:${PORT} --workers 2"
