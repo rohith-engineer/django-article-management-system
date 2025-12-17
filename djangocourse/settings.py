@@ -127,13 +127,14 @@ LOGIN_REDIRECT_URL = "app:home"
 LOGOUT_REDIRECT_URL = "app:home"
 
 # ------------------------
-# Allauth Email-only login for custom user
+# Allauth Email-only login
 # ------------------------
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_LOGIN_METHOD = "email"
+ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email", "password1", "password2"]
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+
 
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
