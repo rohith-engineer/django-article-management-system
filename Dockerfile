@@ -39,4 +39,4 @@ EXPOSE 8000
 # ========================
 # Start Gunicorn
 # ========================
-CMD ["gunicorn", "djangocourse.wsgi:application", "--bind", "0.0.0.0:$PORT"]
+CMD gunicorn djangocourse.wsgi:application --bind 0.0.0.0:$PORT
