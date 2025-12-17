@@ -1,37 +1,42 @@
 from pathlib import Path
 import os
 import dj_database_url
-import socket
 
-# ------------------------
+# ==================================================
 # BASE
-# ------------------------
+# ==================================================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-secret")
-DEBUG = os.getenv("DEBUG", "False") == "True"
-ENV_STATE = os.getenv("ENV_STATE", "DEVELOPMENT")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY not set")
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+DEBUG = os.getenv("DEBUG", "").lower() == "true"
+ENV_STATE = os.getenv("ENV_STATE", "DEVELOPMENT").upper()
+
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1,.railway.app"
+).split(",")
 
 SITE_ID = 1
 ADMIN_URL = os.getenv("ADMIN_URL", "admin/")
 
-# ------------------------
-# SECURITY (Production)
-# ------------------------
-if ENV_STATE.upper() == "PRODUCTION":
+# ==================================================
+# SECURITY (Production only)
+# ==================================================
+if ENV_STATE == "PRODUCTION":
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
-    # Optional: HSTS
+
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
-# ------------------------
+# ==================================================
 # INSTALLED APPS
-# ------------------------
+# ==================================================
 INSTALLED_APPS = [
     # Django
     "django.contrib.admin",
@@ -40,28 +45,29 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.postgres",
     "django.contrib.sites",
     "django.contrib.humanize",
 
-    # Third-party
+    # Third‑party
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
     "widget_tweaks",
-    "whitenoise.runserver_nostatic",
 
     # Local
     "app.apps.AppConfig",
 ]
 
 if DEBUG:
-    INSTALLED_APPS += ["django_browser_reload"]
+    INSTALLED_APPS += [
+        "django_browser_reload",
+        "whitenoise.runserver_nostatic",
+    ]
 
-# ------------------------
+# ==================================================
 # MIDDLEWARE
-# ------------------------
+# ==================================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -71,21 +77,21 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware",  # required by Allauth
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 if DEBUG:
     MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
 
-# ------------------------
+# ==================================================
 # URLS / WSGI
-# ------------------------
+# ==================================================
 ROOT_URLCONF = "djangocourse.urls"
 WSGI_APPLICATION = "djangocourse.wsgi.application"
 
-# ------------------------
+# ==================================================
 # TEMPLATES
-# ------------------------
+# ==================================================
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -102,20 +108,19 @@ TEMPLATES = [
     },
 ]
 
-# ------------------------
-# DATABASE
-# ------------------------
+# ==================================================
+# DATABASE (Railway)
+# ==================================================
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
         conn_max_age=600,
-        ssl_require=True,
+        ssl_require=ENV_STATE == "PRODUCTION",
     )
 }
 
-# ------------------------
+# ==================================================
 # AUTH
-# ------------------------
+# ==================================================
 AUTH_USER_MODEL = "app.UserProfile"
 
 AUTHENTICATION_BACKENDS = [
@@ -126,15 +131,15 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = "app:home"
 LOGOUT_REDIRECT_URL = "app:home"
 
-# ------------------------
-# Allauth Email-only login
-# ------------------------
+# ==================================================
+# ALLAUTH (Email‑only, modern & warning‑free)
+# ==================================================
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email", "password1", "password2"]
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"
-
+ACCOUNT_PRESERVE_USERNAME_CASING = False
 
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
@@ -146,9 +151,9 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# ------------------------
+# ==================================================
 # PASSWORD VALIDATORS
-# ------------------------
+# ==================================================
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -156,28 +161,28 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ------------------------
+# ==================================================
 # I18N
-# ------------------------
+# ==================================================
 LANGUAGE_CODE = "en"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# ------------------------
-# STATIC FILES
-# ------------------------
+# ==================================================
+# STATIC FILES (Whitenoise)
+# ==================================================
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# ------------------------
+# ==================================================
 # DEFAULT PK
-# ------------------------
+# ==================================================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# ------------------------
-# INTERNAL IPS (Debug / Browser reload)
-# ------------------------
-hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-INTERNAL_IPS = ["127.0.0.1"] + ips
+# ==================================================
+# DEBUG‑ONLY INTERNAL IPS
+# ==================================================
+if DEBUG:
+    INTERNAL_IPS = ["127.0.0.1"]
