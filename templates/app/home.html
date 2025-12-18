@@ -2,89 +2,118 @@
 {% load humanize %}
 
 {% block base_content %}
-<main class="max-w-7xl mx-auto mt-10 p-2 md:p-4 lg:p-10">
+<main class="max-w-5xl mx-auto mt-10 px-4">
 
-    <h1 class="title mb-4">Welcome</h1>
-    <p>
-        You have created {{ user.article_count|intcomma }} articles{{ user.article_count|pluralize }}
-        and written {{ user.written_words|intcomma }} words{{ user.written_words|pluralize }}.
-    </p><br>
+    <!-- Header -->
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+        Welcome 👋
+    </h1>
 
-    <a class="button primary inline-block mb-6 w-full sm:w-auto text-center"
-       href="{% url 'app:create_articles' %}">
-        Create New Article
+    <p class="text-gray-600 mb-6">
+        You have created {{ user.article_count|intcomma }} article{{ user.article_count|pluralize }}
+        and written {{ user.written_words|intcomma }} word{{ user.written_words|pluralize }}.
+    </p>
+
+    <!-- Create button -->
+    <a href="{% url 'app:create_articles' %}"
+       class="inline-flex items-center justify-center
+              px-6 py-2 mb-8
+              rounded-md
+              bg-blue-600 text-white
+              hover:bg-blue-700 transition
+              w-full sm:w-auto">
+        ➕ Create New Article
     </a>
 
-    <h2 class="subtitle mb-6">Your Latest Articles</h2>
-    <form
-    method="GET"
-    hx-get="{% url 'app:home' %}"
-    hx-target="#article-list"
-    hx-trigger="keyup changed delay:300ms"
-    class="flex items-center gap-2 mb-4"
->
-    <input
-        type="search"
-        name="search"
-        value="{{ request.GET.search }}"
-        placeholder="Search articles..."
-        class="border border-gray-300 bg-white px-3 py-1 rounded-md text-sm
-               focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-    >
-    <button
-        type="submit"
-        class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600"
-    >
-        Search
-    </button>
-</form>
+    <!-- Section title -->
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">
+        Your Latest Articles
+    </h2>
 
+    <!-- Search -->
+    <form method="GET"
+          hx-get="{% url 'app:home' %}"
+          hx-target="#article-list"
+          hx-trigger="keyup changed delay:300ms"
+          class="flex gap-2 mb-6">
+        <input
+            type="search"
+            name="search"
+            value="{{ request.GET.search }}"
+            placeholder="Search articles..."
+            class="flex-1 border border-gray-300 px-3 py-2 rounded-md text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+        <button
+            type="submit"
+            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+            Search
+        </button>
+    </form>
 
     {% if articles %}
-        <ul>
-            {% for article in articles %}
-                <li class="mb-2">
-                    <a href="{% url 'app:update_articles' article.id %}"
-                       class="text-blue-500 hover:underline">
-                        {{ article.title }}
-                    </a>
-                    — {{ article.word_count }} words
-                </li>
-            {% endfor %}
-        </ul>
+        <!-- Article list -->
+        <div id="article-list">
+            <ul class="space-y-3">
+                {% for article in articles %}
+                    <li class="flex items-center justify-between bg-white p-4 rounded shadow-sm">
+
+                        <div>
+                            <a href="{% url 'app:update_articles' article.id %}"
+                               class="text-blue-600 font-semibold hover:underline">
+                                {{ article.title }}
+                            </a>
+
+                            {% if article.status == "draft" %}
+                                <span class="ml-2 text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded">
+                                    Draft
+                                </span>
+                            {% else %}
+                                <span class="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                                    Published
+                                </span>
+                            {% endif %}
+
+                            <div class="text-xs text-gray-500 mt-1">
+                                {{ article.word_count }} words • Updated {{ article.updated_at|naturaltime }}
+                            </div>
+                        </div>
+
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
         <!-- Pagination -->
         {% if is_paginated %}
+        <div class="flex justify-center gap-4 mt-8">
 
-        <div class="flex items-center justify-center gap-4 mt-6">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+                   class="px-4 py-2 rounded border text-sm hover:bg-gray-100">
+                    ← Previous
+                </a>
+            {% endif %}
 
-
-        {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
-       class="px-3 py-1 border rounded hover:bg-gray-100">
-        Previous
-    </a>
-        {% endif %}
-
-
-            <span class="text-sm text-gray-600">
+            <span class="text-sm text-gray-600 flex items-center">
                 Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
             </span>
 
             {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
-       class="px-3 py-1 border rounded hover:bg-gray-100">
-        Next
-    </a>
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+                   class="px-4 py-2 rounded border text-sm hover:bg-gray-100">
+                    Next →
+                </a>
             {% endif %}
-
 
         </div>
         {% endif %}
 
     {% else %}
-        <p>No articles available yet.</p>
+        <p class="text-gray-500">
+            No articles available yet.
+        </p>
     {% endif %}
 
 </main>
-{% endblock base_content %}
+{% endblock %}

@@ -1,36 +1,42 @@
 from pathlib import Path
 import os
-import dj_database_url
 
 # ==================================================
 # BASE
 # ==================================================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    raise RuntimeError("SECRET_KEY not set")
-
-DEBUG = os.getenv("DEBUG", "").lower() == "true"
+# ==================================================
+# ENVIRONMENT
+# ==================================================
 ENV_STATE = os.getenv("ENV_STATE", "DEVELOPMENT").upper()
-
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
-
-
-SITE_ID = 1
-ADMIN_URL = os.getenv("ADMIN_URL", "admin/")
+DEBUG = os.getenv("DEBUG", "true").lower() == "true"
 
 # ==================================================
-# SECURITY (Production only)
+# SECURITY
 # ==================================================
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-only")
+
+
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY is not set")
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+
+# Production-only security
 if ENV_STATE == "PRODUCTION":
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
-
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+# ==================================================
+# SITE
+# ==================================================
+SITE_ID = 1
+ADMIN_URL = os.getenv("ADMIN_URL", "admin/")
 
 # ==================================================
 # INSTALLED APPS
@@ -46,7 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.humanize",
 
-    # Third‑party
+    # Third-party
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -55,12 +61,8 @@ INSTALLED_APPS = [
 
     # Local
     "app.apps.AppConfig",
-]
-
-if DEBUG:
-    INSTALLED_APPS += [
-        "django_browser_reload",
-        "whitenoise.runserver_nostatic",
+    "django_browser_reload",
+        
     ]
 
 # ==================================================
@@ -68,18 +70,18 @@ if DEBUG:
 # ==================================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+
+    # REQUIRED by django-allauth
+    "allauth.account.middleware.AccountMiddleware",
+
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
-
-if DEBUG:
-    MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
 
 # ==================================================
 # URLS / WSGI
@@ -98,7 +100,7 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
-                "django.template.context_processors.request",
+                "django.template.context_processors.request",  # REQUIRED for allauth
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
@@ -107,53 +109,69 @@ TEMPLATES = [
 ]
 
 # ==================================================
-# DATABASE (Railway)
+# DATABASE
 # ==================================================
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
 # ==================================================
 # AUTH
 # ==================================================
+# =========================
+# AUTH USER MODEL
+# =========================
 AUTH_USER_MODEL = "app.UserProfile"
 
-AUTHENTICATION_BACKENDS = [
+# =========================
+# DJANGO AUTH
+# =========================
+AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
-]
+)
 
-LOGIN_REDIRECT_URL = "app:home"
-LOGOUT_REDIRECT_URL = "app:home"
-
-# ==================================================
-# ALLAUTH (Email‑only, modern & warning‑free)
-# ==================================================
-
+# =========================
+# DJANGO-ALLAUTH (EMAIL ONLY — NO USERNAME)
+# =========================
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_REQUIRED = True
+
 ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_LOGIN_METHODS = {"email"}
+
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-ACCOUNT_PRESERVE_USERNAME_CASING = False
 
+ACCOUNT_SIGNUP_FIELDS = ["email", "password1", "password2"]
 
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
-SOCIALACCOUNT_PROVIDERS = {
-    "github": {
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
+# ==================================================
+# SOCIAL AUTH (GitHub – optional)
+# ==================================================
+GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
+GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
+
+SOCIALACCOUNT_PROVIDERS = {}
+
+if GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET:
+    SOCIALACCOUNT_PROVIDERS["github"] = {
         "APP": {
-            "client_id": os.getenv("GITHUB_CLIENT_ID"),
-            "secret": os.getenv("GITHUB_CLIENT_SECRET"),
+            "client_id": GITHUB_CLIENT_ID,
+            "secret": GITHUB_CLIENT_SECRET,
             "key": "",
         }
     }
-}
 
 # ==================================================
-# PASSWORD VALIDATORS
+# PASSWORD VALIDATION
 # ==================================================
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -163,19 +181,20 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # ==================================================
-# I18N
+# I18N / TIME
 # ==================================================
-LANGUAGE_CODE = "en"
+LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# ==================================================
-# STATIC FILES (Whitenoise)
-# ==================================================
 STATIC_URL = "/static/"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "djangocourse" / "static",
+]
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ==================================================
 # DEFAULT PK
@@ -183,7 +202,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ==================================================
-# DEBUG‑ONLY INTERNAL IPS
+# DEBUG TOOLS
 # ==================================================
 if DEBUG:
     INTERNAL_IPS = ["127.0.0.1"]

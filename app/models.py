@@ -18,10 +18,9 @@ class UserProfile(AbstractUser):
     Custom User model:
     - Email-only authentication
     - No username field
-    - Compatible with django-allauth (stable mode)
     """
 
-    username = None  # remove username completely
+    username = None  # REMOVE username
 
     email = models.EmailField(
         _("email address"),
@@ -43,11 +42,9 @@ class UserProfile(AbstractUser):
 
     @property
     def written_word_count(self):
-        return (
-            self.articles.aggregate(
-                total=models.Sum("word_count")
-            )["total"] or 0
-        )
+        return self.articles.aggregate(
+            total=models.Sum("word_count")
+        )["total"] or 0
 
 
 class Article(models.Model):
@@ -65,7 +62,6 @@ class Article(models.Model):
     updated_at = models.DateTimeField(_("updated at"), auto_now=True)
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        verbose_name=_("creator"),
         on_delete=models.CASCADE,
         related_name="articles",
     )

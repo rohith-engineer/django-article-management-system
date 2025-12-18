@@ -1,3 +1,4 @@
+from re import search
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -14,15 +15,13 @@ class ArticleListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = Article.objects.filter(
-            creator=self.request.user
-        ).order_by("-create_at")
+        creator=self.request.user).order_by("-updated_at")
 
         search = self.request.GET.get("search")
         if search:
             queryset = queryset.filter(title__icontains=search)
 
         return queryset
-
     
 class ArticleCreateView(
     LoginRequiredMixin,
@@ -53,6 +52,10 @@ class ArticleUpdateView(
 
     def test_func(self):
         return self.request.user == self.get_object().creator
+    def form_valid(self, form):
+        messages.info(self.request, "Changes saved successfully.")
+        return super().form_valid(form)
+
 
 class ArticleDeleteView(
     LoginRequiredMixin,

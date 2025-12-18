@@ -1,17 +1,22 @@
-# Environment files
-.env
-.env.*
-.env.docker
-
-# Database
-db.sqlite3
-
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.sqlite3
 
-# Static collected files
+# Virtual environment
+venv/
+.env
+
+# Django
 staticfiles/
+media/
 
-# Node
+# Node / Tailwind
 node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

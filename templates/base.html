@@ -18,47 +18,66 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" crossorigin></script>
 </head>
 
+
+
 <body class="min-h-screen flex flex-col">
+
+
+
+
 
 {% url 'app:create_articles' as create_new_url %}
 {% url 'app:home' as articles_url %}
 {% url 'account_email' as change_email_url %}
 
 <!-- NAVBAR -->
-<nav class="px-10 py-4 border-b border-gray-300 shadow-md">
-    <div class="flex justify-end items-center gap-6 max-w-7xl mx-auto">
+<nav class="bg-white border-b shadow-sm">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex h-16 items-center justify-between">
+
+      <!-- Left -->
+      <div class="flex items-center gap-6">
+        <a href="{% url 'app:home' %}" class="text-xl font-bold text-blue-600">
+          Articles
+        </a>
 
         {% if user.is_authenticated %}
-            <a href="{{ create_new_url }}" class="button primary">
-                Create new
-            </a>
-
-            <a href="{{ articles_url }}" class="hover:underline">
-                Articles
-            </a>
-
-            <a href="{{ change_email_url }}" class="hover:underline">
-                Change email
-            </a>
-
-            <form method="POST" action="{% url 'account_logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="button secondary">
-                    Log out
-                </button>
-            </form>
-        {% else %}
-            <a href="{% url 'account_login' %}" class="button secondary">
-                Log in
-            </a>
-
-            <a href="{% url 'account_signup' %}" class="button primary">
-                Sign up
-            </a>
+          <a href="{% url 'app:create_articles' %}"
+             class="text-sm font-medium text-gray-600 hover:text-blue-600">
+            New Article
+          </a>
         {% endif %}
+      </div>
+
+      <!-- Right -->
+      <div class="flex items-center gap-4">
+        {% if user.is_authenticated %}
+          <span class="text-sm text-gray-500">
+            {{ user.email }}
+          </span>
+
+          <form method="POST" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            <button class="px-4 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600">
+              Logout
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'account_login' %}"
+             class="px-4 py-2 text-sm rounded-md border hover:bg-gray-100">
+            Login
+          </a>
+          <a href="{% url 'account_signup' %}"
+             class="px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700">
+            Sign up
+          </a>
+        {% endif %}
+      </div>
 
     </div>
+  </div>
 </nav>
+
 
 <!-- PAGE CONTENT -->
 <main class="flex-1">

@@ -7,7 +7,12 @@
     <h1 class="text-3xl font-bold text-gray-800 mb-6">
         {% if object %} Edit Article {% else %} Create New Article {% endif %}
     </h1>
-    
+    {% if object %}
+<       <p class="text-sm text-gray-500 mb-4">
+        Last updated: {{ object.updated_at|date:"M d, Y H:i" }}
+        </p>
+    {% endif %}
+
     <form method="POST" class="space-y-6">
         {% csrf_token %}
 
