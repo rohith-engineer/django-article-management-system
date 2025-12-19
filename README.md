@@ -21,6 +21,8 @@ This project demonstrates real-world authentication, social login, and container
 - Docker
 - HTML / CSS
 - SQLite
+## screehshots
+<a href="https://github.com/rohith-engineer/django-article-management-system/blob/main/screenshots/admin%20panal.jpg">admin panal<a/>
 
 ## 📦 Setup (Local)
 
