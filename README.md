@@ -1,37 +1,65 @@
- # Full-Stack Django Authentication App
+# Django Article Management System
 
-A production-style full-stack web application built with Django, Docker, and Django-Allauth.  
-This project demonstrates real-world authentication, social login, and containerized deployment.
+A **production-ready Django web application** that allows users to securely create, edit, publish, and manage articles using a clean, responsive interface.
+
+This project demonstrates **full-stack Django development**, authentication, CRUD operations, and cloud deployment best practices.
+
+---
 
 ## 🚀 Features
-- Custom User Model
-- Email-based authentication
-- GitHub OAuth login
-- Django Allauth integration
-- Secure authentication flow
-- Dockerized setup
-- Whitenoise static file handling
-- Admin dashboard
-- SQLite database (development)
+
+- User authentication (Login / Signup)
+- Secure user-based access control
+- Create, edit, delete articles (CRUD operations)
+- Draft and Published article workflow
+- Word count tracking
+- Search functionality
+- Pagination for scalable content handling
+- Last updated timestamp tracking
+- Django Admin dashboard
+- Clean and responsive UI using Tailwind CSS
+
+---
 
 ## 🛠 Tech Stack
-- Python
-- Django
-- Django Allauth
+
+### Backend & Core Technologies
+- Python 3
+- Django (MVT Architecture, ORM, Class-Based Views)
+- Django Allauth (Email-based Authentication & Authorization)
+- SQLite (Development Database)
+
+### Frontend & UI
+- HTML5
+- Tailwind CSS
+- Responsive UI Design
+
+### DevOps & Deployment
 - Docker
-- HTML / CSS
-- SQLite
-## screehshots
-<a href="https://github.com/rohith-engineer/django-article-management-system/blob/main/screenshots/admin%20panal.jpg">admin panal<a/>
+- Docker Compose
+- Railway Cloud Deployment
+- WhiteNoise (Static File Management)
 
-## 📦 Setup (Local)
+### Tools & Best Practices
+- Git & GitHub (Version Control)
+- Environment Variable Management
+- Production-ready Django Settings
+- Secure Authentication & Authorization
 
+---
 
-git clone https://github.com/yourusername/djangocourse.git
-cd djangocourse
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-# django-article-management-system
+## 📸 Screenshots
+
+- Dashboard  
+- Create / Edit Article  
+- Article List View  
+- Search & Pagination  
+- Django Admin Panel  
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/YOUR_USERNAME/django-article-management-system.git
