@@ -47,15 +47,25 @@ This project demonstrates **full-stack Django development**, authentication, CRU
 - Secure Authentication & Authorization
 
 ---
-
 ## 📸 Screenshots
 
-- Dashboard  
-- Create / Edit Article  
-- Article List View  
-- Search & Pagination  
-- Django Admin Panel  
+### Dashboard / Admin Panel
+[![Dashboard](screenshots/admin%20panal.jpg)](screenshots/admin%20panal.jpg)
 
+### Create Article
+[![Create Article](screenshots/create%20articles.jpg)](screenshots/create%20articles.jpg)
+
+### Edit Article
+[![Edit Article](screenshots/edit%20article.jpg)](screenshots/edit%20article.jpg)
+
+### Pagination
+[![Pagination](screenshots/pagination.jpg)](screenshots/pagination.jpg)
+
+### Search Articles
+[![Search Articles](screenshots/search%20articles.jpg)](screenshots/search%20articles.jpg)
+
+### Django Admin Panel
+[![Django Admin](screenshots/django-adminstration.jpg)](screenshots/django-adminstration.jpg)
 ---
 
 ## ⚙️ Installation & Setup
