@@ -72,4 +72,4 @@ This project demonstrates **full-stack Django development**, authentication, CRU
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/django-article-management-system.git
+git clone https://github.com/rohith-engineer/django-article-management-system.git
